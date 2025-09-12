@@ -1,24 +1,21 @@
-name: README.md
-
+name: Build README.md from README.org
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # only needed if commit: true
 
 jobs:
-  generate:
+  build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: yourname/org-to-readme-md@v1
         with:
-          submodules: true
-      - uses: purcell/setup-emacs@master
-        with:
-          version: 28.2
-      - run: emacs --batch org-readme.org --load readme.el --eval "(readme/to-markdown \"README.md\")"
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Regenerate README.md
+          org-path: README.org
+          md-path: README.md
+          alerts: "true"           # convert #+begin_note → [!NOTE]
+          use-title-helper: "true" # keep Jeff's title tweak
+          commit: "true"           # auto-commit README.md
