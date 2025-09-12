@@ -1,12 +1,22 @@
 
 # Generate repository README files from Org documents
 
-A fork of [[jeffkreeftmeijer/readme.el](https://github.com/jeffkreeftmeijer/readme.el) as a Github Action to avoid including uneccesary submodules in your repos
+A fork of [jeffkreeftmeijer/readme.el](https://github.com/jeffkreeftmeijer/readme.el) as a Github Action to avoid including uneccesary submodules in your repos
 
 
 ## Features
 
-Adds support for \_G<sub>ithub</sub> \_F<sub>lavored</sub> \_M<sub>arkdown</sub>'s alerts. Turning: into:
+Adds support for \*G\*ithub \*F\*lavored \*M\*arkdown's alerts.
+
+Turning:
+
+```org
+#+begin_note
+This is a note
+#+end_note
+```
+
+Into:
 
 > [!NOTE]
 > This is a note
@@ -17,9 +27,11 @@ For all GFM alert styles *(NOTE, TIP, WARNING, CAUTION, IMPORTANT)*
 
 ## Usage
 
-1.  Include a github action by copying the following into a `.github/workflows/generate-markdown-readme.yaml` file (you can name it whatever you like)
+Include a github action by copying the following into a `.github/workflows/generate-markdown-readme.yaml` file (you can name it whatever you like)
 
-*or* Download the below [workflow](https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/example-workflow.yaml).
+*or*
+
+Download the below [workflow](https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/example-workflow.yaml).
 
 ```yaml
 name: Generate README.md from README.org
