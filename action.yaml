@@ -36,6 +36,7 @@ runs:
   steps:
     - uses: actions/checkout@v4
       with:
+        submodules: yes
         fetch-depth: 2  # needed for --amend
 
     - uses: purcell/setup-emacs@master

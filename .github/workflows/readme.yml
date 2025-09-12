@@ -3,8 +3,9 @@ on:
   push:
     branches-ignore:
       - main
-    paths:
-      - '**/.org'
+    # while testing, lets always run it
+    # paths:
+    #   - '**/.org'
   workflow_dispatch:
 
 permissions:
