@@ -21,3 +21,4 @@ jobs:
           alerts: true           # convert #+begin_note → [!NOTE]
           use-title-helper: true # keep Jeff's title tweak
           commit: true           # auto-commit README.md
+          force-amend: true

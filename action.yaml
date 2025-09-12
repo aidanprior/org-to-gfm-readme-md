@@ -70,6 +70,7 @@ runs:
     - uses: stefanzweifel/git-auto-commit-action@v6
       if: fromJSON(inputs.commit) && fromJSON(inputs.force-amend)
       with:
+        skip_dirty_check: true
         file_pattern: ${{ inputs.md-path }}
         add_options: --force # to add ingored generated files
         commit_message: ${{ steps.last-commit.outputs.message }}
@@ -80,5 +81,7 @@ runs:
     - uses: stefanzweifel/git-auto-commit-action@v6
       if: fromJSON(inputs.commit) && !fromJSON(inputs.force-amend)
       with:
+        skip_dirty_check: true
+        add_options: --force # to add ingored generated files
         file_pattern: ${{ inputs.md-path }}
         commit_message: "docs: Generate `${{ inputs.md-path }}` from `${{ inputs.org-path }}`"
