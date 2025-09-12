@@ -39,7 +39,7 @@ runs:
         submodules: true
         fetch-depth: 2  # needed for --amend
 
-    - uses: purcell/setup-emacs@v6
+    - uses: purcell/setup-emacs@master
       with:
         version: 28.2
 
