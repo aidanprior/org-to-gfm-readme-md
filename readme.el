@@ -1,8 +1,9 @@
 ;; readme.el  -*- lexical-binding: t; -*-
-(let ((dir (or (getenv "GITHUB_WORKSPACE") default-directory)))
-  (load (expand-file-name "ox-gfm/ox-gfm.el" dir))
-  (load (expand-file-name "ox-md-title/ox-md-title.el" dir))
-  (load (expand-file-name "ox-gfm-alerts.el" dir)))
+(message "default-directory: %s" default-directory)
+(let ((dir (file-name-directory load-file-name)))
+  (load (concat dir "ox-gfm/ox-gfm"))
+  (load (concat dir "ox-md-title/ox-md-title"))
+  (load (concat dir "ox-gfm-alerts.el")))
 
 (require 'ox-gfm)
 (require 'ox-md-title)
