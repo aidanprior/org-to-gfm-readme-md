@@ -71,6 +71,7 @@ runs:
       if: fromJSON(inputs.commit) && fromJSON(inputs.force-amend)
       with:
         file_pattern: ${{ inputs.md-path }}
+        add_options: --force # to add ingored generated files
         commit_message: ${{ steps.last-commit.outputs.message }}
         commit_options: --amend --no-edit
         push_options: --force-with-lease
