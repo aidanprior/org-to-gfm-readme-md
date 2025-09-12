@@ -2,7 +2,7 @@ name: Generate README.md from README.org
 on:
   push:
     branches-ignore:
-      - main
+      - main                      # recommended for commit: true
     paths:
       - '**/.org'
   workflow_dispatch:
@@ -11,12 +11,12 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # only needed if commit: true
+      contents: write             # only needed if commit: true
     steps:
       - uses: aidanprior/org-to-gfm-readme-md@v1
         with:
-          org-path: org-readme.org
+          org-path: README.org
           md-path: README.md
-          alerts: true           # convert #+begin_note → [!NOTE]
-          use-title-helper: true # keep Jeff's title tweak
-          commit: true           # auto-commit README.md
+          alerts: true            # convert #+begin_note → [!NOTE]
+          use-title-helper: true  # Jeff's title tweak
+          commit: true            # auto-commit README.md
