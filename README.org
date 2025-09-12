@@ -3,18 +3,20 @@
 #+date: 2025-09-12
 #+options: toc:nil
 
-A fork of [[[https://github.com/jeffkreeftmeijer/readme.el][jeffkreeftmeijer/readme.el]] as a Github Action to avoid including uneccesary submodules in your repos
+A fork of [[https://github.com/jeffkreeftmeijer/readme.el][jeffkreeftmeijer/readme.el]] as a Github Action to avoid including uneccesary submodules in your repos
 
 * Features
 
-Adds support for _G_ithub _F_lavored _M_arkdown's alerts. 
+Adds support for *G*ithub *F*lavored *M*arkdown's alerts. 
+
 Turning: 
-#+begin_src org :exports none
+#+begin_src org
 #+begin_note
 This is a note
 #+end_note
 #+end_src
-into:
+
+Into:
 #+begin_note
 This is a note
 #+end_note
@@ -22,9 +24,12 @@ This is a note
 For all GFM alert styles /(NOTE, TIP, WARNING, CAUTION, IMPORTANT)/
 
 * Usage
-1. Include a github action by copying the following into a =.github/workflows/generate-markdown-readme.yaml= file (you can name it whatever you like)
+Include a github action by copying the following into a =.github/workflows/generate-markdown-readme.yaml= file (you can name it whatever you like)
+
 /or/
+
 Download the below [[https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/example-workflow.yaml][workflow]].
+
 #+begin_src yaml :tangle example-workflow.yaml
 name: Generate README.md from README.org
 on:
