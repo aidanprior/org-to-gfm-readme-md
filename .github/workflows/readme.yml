@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./
         with:
-          org-path: README.org
+          org-path: org-readme.org
           md-path: README.md
           alerts: true           # convert #+begin_note → [!NOTE]
           use-title-helper: true # keep Jeff's title tweak
