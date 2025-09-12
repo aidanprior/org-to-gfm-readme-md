@@ -3,11 +3,13 @@
 #+date: 2025-09-12
 #+options: toc:nil
 
+A Github action to convert =org= READMEs to =markdown= for better integration with Github's web markdown viewer
+
+* Introduction
+
 A fork of [[https://github.com/jeffkreeftmeijer/readme.el][jeffkreeftmeijer/readme.el]] as a Github Action to avoid including uneccesary submodules in your repos
 
-* Features
-
-Adds support for *G*ithub *F*lavored *M*arkdown's alerts. 
+Adds support for Github Flavored Markdown's alerts.
 
 Turning: 
 #+begin_src org
@@ -21,21 +23,23 @@ Into:
 This is a note
 #+end_note
 
-For all GFM alert styles /(NOTE, TIP, WARNING, CAUTION, IMPORTANT)/
+For all GFM alert styles.
+
+/(NOTE, TIP, WARNING, CAUTION, IMPORTANT)/
 
 * Usage
 Include a github action by copying the following into a =.github/workflows/generate-markdown-readme.yaml= file (you can name it whatever you like)
 
 /or/
 
-Download the below [[https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/example-workflow.yaml][workflow]].
+Download the below [[https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/example-workflow.yaml][workflow]] directly.
 
 #+begin_src yaml :tangle example-workflow.yaml
 name: Generate README.md from README.org
 on:
   push:
     branches-ignore:
-      - main                      # recommended to if commit: true
+      - main                      # recommended to if force-amend: true
     paths:
       - '**/.org'
   workflow_dispatch:
@@ -47,10 +51,20 @@ jobs:
       contents: write             # needed if commit: true
     steps:
       - uses: aidanprior/org-to-gfm-readme-md@v1
-        with:
-          org-path: README.org
-          md-path: README.md
-          alerts: true            # convert #+begin_note → [!NOTE]
-          use-title-helper: true  # Jeff's title tweak
           commit: true            # auto-commit README.md
 #+end_src
+
+** Options
+
+Use the following options in the src_yaml{with:} block
+
+| option         | default                                      | description                                                 | notes                                                                                        |
+|----------------+----------------------------------------------+-------------------------------------------------------------+----------------------------------------------------------------------------------------------|
+| =org-path=       | =README.org=                                   | Path to the source Org file                                 |                                                                                              |
+| =md-path=        | =README.md=                                    | Output Markdown path                                        |                                                                                              |
+| =alerts=         | =true=                                         | Convert Org special blocks to GitHub alert callouts         | As described in the [[*Introduction][Introduction]]                                                             |
+| =title=          | =true=                                         | Insert document title from org's src_org{#+title:} property | [[https://github.com/jeffkreeftmeijer/ox-md-title.el/blob/main/README.md][See Jeff's Tweaks]]                                                                            |
+| =commit=         | =false=                                        | Add/commit/push the generated file                          | 1. Requires src_yaml{permissions: contents: write} on the job                                |
+| =force-amend=    | =false=                                        | Amend the current commit instead of adding a new one        | Requires src_yaml{commit: true}, Recommended to use with src_yaml{branches-ignore: [ main ]} |
+| =git-user-name=  | =github-actions[bot]=                          | Git username to use when committing                         |                                                                                              |
+| =git-user-email= | =github-actions[bot]@users.noreply.github.com= | Git email to use when committing                            |                                                                                              |
