@@ -54,6 +54,7 @@ jobs:
       contents: write             # needed if commit: true
     steps:
       - uses: aidanprior/org-to-gfm-readme-md@v1
+	with:
 	  commit: true            # auto-commit README.md
 ```
 
@@ -66,7 +67,7 @@ Use the following options in the `with:` block
 |---------------- |---------------------------------------------- |---------------------------------------------------- |------------------------------------------------------------------------------------------- |
 | `org-path`       | `README.org`                                   | Path to the source Org file                          |                                                                                             |
 | `md-path`        | `README.md`                                    | Output Markdown path                                 |                                                                                             |
-| `alerts`         | `true`                                         | Convert Org special blocks to GitHub alert callouts  | As described in the [Introduction](#orga3e05e4)                                             |
+| `alerts`         | `true`                                         | Convert Org special blocks to GitHub alert callouts  | As described in the [Introduction](#org77a6b74)                                             |
 | `title`          | `true`                                         | Insert document title from org's `#+title:` property | [See Jeff's Tweaks](https://github.com/jeffkreeftmeijer/ox-md-title.el/blob/main/README.md) |
 | `commit`         | `false`                                        | Add/commit/push the generated file                   | 1. Requires `permissions: contents: write` on the job                                       |
 | `force-amend`    | `false`                                        | Amend the current commit instead of adding a new one | Requires `commit: true`, Recommended to use with `branches-ignore: [ main ]`                |

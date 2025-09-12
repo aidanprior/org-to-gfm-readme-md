@@ -51,6 +51,7 @@ jobs:
       contents: write             # needed if commit: true
     steps:
       - uses: aidanprior/org-to-gfm-readme-md@v1
+        with:
           commit: true            # auto-commit README.md
 #+end_src
 
