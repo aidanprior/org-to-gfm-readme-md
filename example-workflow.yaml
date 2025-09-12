@@ -13,8 +13,7 @@ jobs:
     permissions:
       contents: write   # only needed if commit: true
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./ # this action uses itself
+      - uses: aidanprior/org-to-gfm-readme-md@v1
         with:
           org-path: org-readme.org
           md-path: README.md

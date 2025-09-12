@@ -16,7 +16,7 @@ inputs:
     description: Convert Org special blocks to GitHub alert callouts
     default: true
   use-title-helper:
-    description: Apply ox-md-title tweaks (Jeff’s helper)
+    description: Apply ox-md-title tweaks 
     default: true
   commit:
     description: Add/commit/push the generated file
@@ -39,7 +39,7 @@ runs:
         submodules: true
         fetch-depth: 2  # needed for --amend
 
-    - uses: purcell/setup-emacs@master
+    - uses: purcell/setup-emacs@v6
       with:
         version: 28.2
 
