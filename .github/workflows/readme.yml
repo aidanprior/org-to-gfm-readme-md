@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aidanprior/org-to-readme-md@v1
+      - uses: aidanprior/org-to-readme-md@main
         with:
           org-path: README.org
           md-path: README.md
