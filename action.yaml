@@ -1,6 +1,6 @@
 name: Org → README.md (with GitHub alerts)
 description: Export README.org to README.md using ox-gfm (+ optional alert callouts)
-author: you
+author: Aidan Prior
 branding:
   icon: book
   color: blue
@@ -14,13 +14,16 @@ inputs:
     default: README.md
   alerts:
     description: Convert Org special blocks to GitHub alert callouts
-    default: "true"
+    default: true
   use-title-helper:
     description: Apply ox-md-title tweaks (Jeff’s helper)
-    default: "true"
+    default: true
   commit:
     description: Add/commit/push the generated file
-    default: "false"
+    default: false
+  force-amend:
+    description: Amend the current commit instead of adding a new one
+    default: false
   git-user-name:
     description: Git username to use when committing
     default: github-actions[bot]
@@ -31,11 +34,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install Emacs
-      shell: bash
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y emacs-nox
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2  # needed for --amend
+
+    - uses: purcell/setup-emacs@master
+      with:
+        version: 28.2
 
     - name: Export Org → GFM
       shell: bash
@@ -49,14 +54,29 @@ runs:
           -l "$GITHUB_ACTION_PATH/readme.el" \
           --eval "(readme/to-markdown \"$MD_PATH\" \"$ALERTS\" \"$USE_TITLE_HELPER\")"
 
-    - name: Commit changes (optional)
-      if: inputs.commit == 'true'
+    # Capture last commit metadata (only if we will amend)
+    - name: Get last commit message
+      if: fromJSON(inputs.commit) && fromJSON(inputs.force-amend)
+      id: last-commit
       shell: bash
       run: |
-        if ! git diff --quiet --exit-code ${{ inputs.md-path }}; then
-          git config user.name  "${{ inputs.git-user-name }}"
-          git config user.email "${{ inputs.git-user-email }}"
-          git add "${{ inputs.md-path }}"
-          git commit -m "chore: rebuild ${{ inputs.md-path }} from ${{ inputs.org-path }}"
-          git push
-        fi
+        echo "message<<EOF" >> "$GITHUB_OUTPUT"
+        git log -1 --pretty=%B >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
+        echo "author=$(git log -1 --pretty='%an <%ae>')" >> "$GITHUB_OUTPUT"
+
+    # Amend the current commit with README.md only
+    - uses: stefanzweifel/git-auto-commit-action@v6
+      if: fromJSON(inputs.commit) && fromJSON(inputs.force-amend)
+      with:
+        file_pattern: ${{ inputs.md-path }}
+        commit_message: ${{ steps.last-commit.outputs.message }}
+        commit_options: --amend --no-edit
+        push_options: --force-with-lease
+
+    # Or create a new commit
+    - uses: stefanzweifel/git-auto-commit-action@v6
+      if: fromJSON(inputs.commit) && !fromJSON(inputs.force-amend)
+      with:
+        file_pattern: ${{ inputs.md-path }}
+        commit_message: "docs: Generate `${{ inputs.md-path }}` from `${{ inputs.org-path }}`"

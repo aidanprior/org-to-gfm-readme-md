@@ -1,7 +1,10 @@
 name: Build README.md from README.org
 on:
   push:
-    branches: [ main ]
+    branches-ignore:
+      - main
+    paths:
+      - '**/.org'
   workflow_dispatch:
 
 permissions:
@@ -12,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: yourname/org-to-readme-md@v1
+      - uses: aidanprior/org-to-readme-md@v1
         with:
           org-path: README.org
           md-path: README.md
-          alerts: "true"           # convert #+begin_note → [!NOTE]
-          use-title-helper: "true" # keep Jeff's title tweak
-          commit: "true"           # auto-commit README.md
+          alerts: true           # convert #+begin_note → [!NOTE]
+          use-title-helper: true # keep Jeff's title tweak
+          commit: true           # auto-commit README.md
