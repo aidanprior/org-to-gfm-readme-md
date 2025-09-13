@@ -3,7 +3,8 @@
 #+date: 2025-09-12
 #+options: toc:nil
 
-Github's web markdown viewer supports =README.org= files, but its feature list is lacking compared to =README.md= files
+Github's web markdown viewer supports =README.org= files, but its feature list is lacking compared to =README.md= files.
+
 This precommit script tries to reconcile that, by converting org files to markdown file.
 
 * About
@@ -46,6 +47,17 @@ Install with the following curl command:
     #+end_src
 
 #+RESULTS:
+| ➡️   | Fetching                | pinned                  | elisp…               |           |             |             |        |      |      |         |
+| ✅   | Installed:              |                         |                      |           |             |             |        |      |      |         |
+| -     | .githooks/org-to-gfm.el | (ox-gfm                 | @                    | bd85f6a,  | ox-md-title | @           | 0.3.0) |      |      |         |
+| -     | .githooks/pre-commit    |                         |                      |           |             |             |        |      |      |         |
+| Git   | configured:             | core.hooksPath          | ->                   | .githooks |             |             |        |      |      |         |
+|       |                         |                         |                      |           |             |             |        |      |      |         |
+| Next: |                         |                         |                      |           |             |             |        |      |      |         |
+| git   | add                     | .githooks/org-to-gfm.el | .githooks/pre-commit |           |             |             |        |      |      |         |
+| git   | commit                  | -m                      | 'chore:              | installed | org→gfm     | pre-commit' |        |      |      |         |
+| #     | Test:                   | edit                    | &                    | stage     | an          | .org        |  file, | then | 'git | commit' |
+|       |                         |                         |                      |           |             |             |        |      |      |         |
 
 As you can see, it creates the pre-commit script files, and configures =git= to use them.
 From there, follow the next steps. Commit org files, and watch them convert automatically

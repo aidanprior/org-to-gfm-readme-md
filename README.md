@@ -1,7 +1,9 @@
 
 # A git Hook to Generate Github Flavored Markdown files from Org documents
 
-Github's web markdown viewer supports `README.org` files, but its feature list is lacking compared to `README.md` files This precommit script tries to reconcile that, by converting org files to markdown file.
+Github's web markdown viewer supports `README.org` files, but its feature list is lacking compared to `README.md` files.
+
+This precommit script tries to reconcile that, by converting org files to markdown file.
 
 
 ## About
