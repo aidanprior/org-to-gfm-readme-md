@@ -147,7 +147,7 @@ chmod +x "$HOOKS_DIR/pre-commit"
 git config core.hooksPath "$HOOKS_DIR"
 
 echo "✅ Installed:"
-echo "  - $ELISP_FILE  (ox-gfm @ $OX_GFM_REF, ox-md-title @ $OX_MD_TITLE_REF; )"
+echo "  - $ELISP_FILE  (ox-gfm @ $OX_GFM_REF, ox-md-title @ $OX_MD_TITLE_REF)"
 echo "  - $HOOKS_DIR/pre-commit"
 echo "Git configured: core.hooksPath -> $HOOKS_DIR"
 echo "
