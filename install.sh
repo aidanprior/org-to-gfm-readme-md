@@ -53,9 +53,8 @@ cat >>"$ELISP_FILE" <<'EOF'
 EOF
 cat "$tmp/ox-gfm.el" >>"$ELISP_FILE"
 cat >>"$ELISP_FILE" <<'EOF'
-
-;;; --------------------------- gfm-alerts implementation ----------------------
-;;; ox-gfm-alerts.el --- Org → GFM with GitHub alerts  -*- lexical-binding: t; -*-
+;;; ---------------- gfm-alerts + collapsible RESULTS -----------------
+;;; ox-gfm-alerts.el --- Alerts + <details>-wrapped RESULTS  -*- lexical-binding: t; -*-
 
 (require 'ox)
 (require 'ox-gfm)
@@ -68,22 +67,44 @@ cat >>"$ELISP_FILE" <<'EOF'
     ("caution"   . "[!CAUTION]"))
   "Map Org special block types to GitHub alert headers.")
 
+(defun org-gfm-alerts--ensure-nl (s)
+  (if (string-match-p "\n\\'" s) s (concat s "\n")))
+
 (defun org-gfm-alerts--blockquote (s)
   (when s
     (mapconcat (lambda (l) (concat "> " l))
-               (split-string s "\n") "\n")))
+               (split-string (or s "") "\n") "\n")))
 
-(defun org-gfm-alerts--special-block (special-block contents info)
+(defun org-gfm-alerts--blank-p (s)
+  (or (null s) (string-match-p "\\`[ \t\n\r]*\\'" s)))
+
+(defun org-gfm-alerts-special-block (special-block contents info)
+  "Render Org special blocks as GitHub Alerts; fallback to gfm."
   (let* ((type (downcase (or (org-element-property :type special-block) "")))
          (tag  (cdr (assoc type org-gfm-alerts--map))))
     (if tag
         (concat (org-gfm-alerts--blockquote tag) "\n"
-                (when (and contents (not (string-empty-p contents)))
-                  (concat (org-gfm-alerts--blockquote contents) "\n")))
+                (unless (org-gfm-alerts--blank-p contents)
+                  (concat (org-gfm-alerts--blockquote (org-trim contents)) "\n")))
       (org-export-with-backend 'gfm special-block contents info))))
 
+(defun org-gfm-alerts--wrap-details (body)
+  (concat "<details>\n<summary>Results</summary>\n\n" body "\n</details>\n"))
+
+(defun org-gfm-alerts-example-block (example-block _contents info)
+  (let* ((code (org-export-format-code-default example-block info))
+         (code* (org-gfm-alerts--ensure-nl code)))
+    (org-gfm-alerts--wrap-details (concat "```\n" code* "```"))))
+
+(defun org-gfm-alerts-fixed-width (fixed _contents _info)
+  (let* ((raw (or (org-element-property :value fixed) ""))
+         (raw* (org-gfm-alerts--ensure-nl raw)))
+    (org-gfm-alerts--wrap-details (concat "```\n" raw* "```"))))
+
 (org-export-define-derived-backend 'gfm-alerts 'gfm
-  :translate-alist '((special-block . org-gfm-alerts--special-block)))
+  :translate-alist '((special-block . org-gfm-alerts-special-block)
+                     (example-block . org-gfm-alerts-example-block)
+                     (fixed-width   . org-gfm-alerts-fixed-width)))
 
 (provide 'ox-gfm-alerts)
 ;;; ox-gfm-alerts.el ends here

@@ -12,25 +12,39 @@ A fork of [[https://github.com/jeffkreeftmeijer/readme.el][jeffkreeftmeijer/read
 
 * Features
 
-Adds support for _G_​ithub _F_​lavored _M_​arkdown's alerts.
+1. Adds support for _G_​ithub _F_​lavored _M_​arkdown's alerts.
 
-Turning: 
+  Turning: 
 #+begin_src org
 #+begin_note
-This is a note
+  This is a note
 #+end_note
 #+end_src
 
-Into:
+  Into:
 #+begin_note
-This is a note
+  This is a note
 #+end_note
 
-For all GFM alert styles.
+  For all GFM alert styles.
 
-/(NOTE, TIP, WARNING, CAUTION, IMPORTANT)/
+  /(NOTE, TIP, WARNING, CAUTION, IMPORTANT)/
 
+2. Adds support for =org='s results blocks as =<details>= html code that is rendered nicely by Github
+  For example
+#+begin_src sh :results output verbatium :exports both
+cowsay "That's pretty neat!"
+#+end_src
 
+#+RESULTS:
+:  _____________________
+: < That's pretty neat! >
+:  ---------------------
+:         \   ^__^
+:          \  (oo)\_______
+:             (__)\       )\/\
+:                 ||----w |
+:                 ||     ||
 
 * Getting Started
 ** Prerequisites
@@ -42,22 +56,24 @@ Install with the following curl command:
     #+begin_warning
     Always inspect scripts you intend to run on your computer. Do not trust me.
     #+end_warning
-    #+begin_src sh
+    #+begin_src sh :results output code :exports both
     curl -fsSL "https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/install.sh" | sh
     #+end_src
 
 #+RESULTS:
-| ➡️   | Fetching                | pinned                  | elisp…               |           |             |             |        |      |      |         |
-| ✅   | Installed:              |                         |                      |           |             |             |        |      |      |         |
-| -     | .githooks/org-to-gfm.el | (ox-gfm                 | @                    | bd85f6a,  | ox-md-title | @           | 0.3.0) |      |      |         |
-| -     | .githooks/pre-commit    |                         |                      |           |             |             |        |      |      |         |
-| Git   | configured:             | core.hooksPath          | ->                   | .githooks |             |             |        |      |      |         |
-|       |                         |                         |                      |           |             |             |        |      |      |         |
-| Next: |                         |                         |                      |           |             |             |        |      |      |         |
-| git   | add                     | .githooks/org-to-gfm.el | .githooks/pre-commit |           |             |             |        |      |      |         |
-| git   | commit                  | -m                      | 'chore:              | installed | org→gfm     | pre-commit' |        |      |      |         |
-| #     | Test:                   | edit                    | &                    | stage     | an          | .org        |  file, | then | 'git | commit' |
-|       |                         |                         |                      |           |             |             |        |      |      |         |
+#+begin_src sh
+➡️  Fetching pinned elisp…
+✅ Installed:
+  - .githooks/org-to-gfm.el  (ox-gfm @ bd85f6a, ox-md-title @ 0.3.0)
+  - .githooks/pre-commit
+Git configured: core.hooksPath -> .githooks
+
+Next:
+  git add .githooks/org-to-gfm.el .githooks/pre-commit
+  git commit -m 'chore: installed org→gfm pre-commit'
+  # Test: edit & stage an .org file, then 'git commit'
+
+#+end_src
 
 As you can see, it creates the pre-commit script files, and configures =git= to use them.
 From there, follow the next steps. Commit org files, and watch them convert automatically
