@@ -6,7 +6,7 @@ Github's web markdown viewer supports `README.org` files, but its feature list i
 
 ## About
 
-A fork of [jeffkreeftmeijer/readme.el](https://github.com/jeffkreeftmeijer/readme.el) as a portable git hook to avoid including uneccesary submodules in your repos
+A fork of [jeffkreeftmeijer/readme.el](https://github.com/jeffkreeftmeijer/readme.el) as a portable git hook to avoid including unnecessary submodules in your repos
 
 
 ## Features
