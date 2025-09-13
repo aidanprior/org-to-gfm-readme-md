@@ -17,7 +17,7 @@ for org in $FILES; do
 done
 PAIRS="$PAIRS)"
 
-emacs -Q --batch --eval '(setq load-no-message t inhibit-message t message-log-max nil)' -l "$ELISP" --eval "(let* ((pairs $PAIRS))
+emacs -Q --batch   --eval '(setq load-no-message t inhibit-message t message-log-max nil)'   -l "$ELISP"   --eval "(let* ((pairs $PAIRS))
            (dolist (p pairs)
              (let* ((org (car p)) (md (cdr p))
                     (buf (find-file-noselect org)))
