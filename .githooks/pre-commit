@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eu
+
+echo "[pre-commit] start"
+
+# Allow bypass
+if [ "${SKIP_ORG_MD-}" = "1" ]; then
+  echo "[pre-commit] Skipping (SKIP_ORG_MD=1)"
+  exit 0
+fi
+
+# Need emacs
+if ! command -v emacs >/dev/null 2>&1; then
+  echo "[pre-commit] ERROR: emacs not found on PATH" >&2
+  exit 1
+fi
+
+ELISP="./readme.el"
+
+# Get staged .org files (Added/Copied/Modified)
+# Use Git’s pathspec to match *.org and avoid grep’s exit codes
+FILES="$(git diff --cached --name-only --diff-filter=ACM -- '*.org' || true)"
+
+if [ -z "$FILES" ]; then
+  echo "[pre-commit] No staged .org files; nothing to do."
+  exit 0
+fi
+
+# NOTE: This simple loop splits on whitespace.
+# If your repo has spaces/newlines in filenames, we can switch to a more complex approach.
+for org in $FILES; do
+  md="$(printf '%s' "$org" | sed 's/\.org$/.md/')"
+  echo "[pre-commit] $org -> $md"
+
+  emacs -Q --batch "$org" \
+    -l "$ELISP" \
+    --eval "(readme/to-markdown \"$md\" \"true\" \"true\")"
+
+  git add -- "$md"
+done
+
+echo "[pre-commit] done"
