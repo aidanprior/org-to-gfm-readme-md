@@ -52,4 +52,4 @@ From there, follow the next steps. Commit org files, and watch them convert auto
 
 * Bugs
         If you encounter any bugs, please use the issues tab.
-        If you can fix them yourself, please still create an issue an then a pull request that mentions it
+        If you can fix them yourself, please still create an issue and then a pull request that mentions it
