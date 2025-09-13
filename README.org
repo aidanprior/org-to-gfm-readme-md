@@ -7,7 +7,7 @@ Github's web markdown viewer supports =README.org= files, but its feature list i
 This precommit script tries to reconcile that, by converting org files to markdown file.
 
 * About
-A fork of [[https://github.com/jeffkreeftmeijer/readme.el][jeffkreeftmeijer/readme.el]] as a portable git hook to avoid including uneccesary submodules in your repos
+A fork of [[https://github.com/jeffkreeftmeijer/readme.el][jeffkreeftmeijer/readme.el]] as a portable git hook to avoid including unnecessary submodules in your repos
 
 * Features
 
