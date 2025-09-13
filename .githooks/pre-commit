@@ -1,42 +1,44 @@
 #!/bin/sh
 set -eu
 
-echo "[pre-commit] start"
+echo "[pre-commit] Org→MD start"
 
-# Allow bypass
-if [ "${SKIP_ORG_MD-}" = "1" ]; then
-  echo "[pre-commit] Skipping (SKIP_ORG_MD=1)"
-  exit 0
-fi
+[ "${SKIP_ORG_MD-}" = "1" ] && { echo "[pre-commit] Skipping"; exit 0; }
+command -v emacs >/dev/null 2>&1 || { echo "[pre-commit] ERROR: emacs not found" >&2; exit 1; }
 
-# Need emacs
-if ! command -v emacs >/dev/null 2>&1; then
-  echo "[pre-commit] ERROR: emacs not found on PATH" >&2
-  exit 1
-fi
+ELISP="./readme-inline.el"
 
-ELISP="./readme.el"
-
-# Get staged .org files (Added/Copied/Modified)
-# Use Git’s pathspec to match *.org and avoid grep’s exit codes
 FILES="$(git diff --cached --name-only --diff-filter=ACM -- '*.org' || true)"
+[ -z "$FILES" ] && { echo "[pre-commit] No staged .org files; nothing to do."; exit 0; }
 
-if [ -z "$FILES" ]; then
-  echo "[pre-commit] No staged .org files; nothing to do."
-  exit 0
-fi
-
-# NOTE: This simple loop splits on whitespace.
-# If your repo has spaces/newlines in filenames, we can switch to a more complex approach.
+PAIRS="'("
 for org in $FILES; do
-  md="$(printf '%s' "$org" | sed 's/\.org$/.md/')"
-  echo "[pre-commit] $org -> $md"
+  md=$(printf '%s' "$org" | sed 's/\.org$/.md/')
+  q_org=$(printf '%s' "$org" | sed 's/"/\\"/g')
+  q_md=$(printf '%s' "$md"  | sed 's/"/\\"/g')
+  PAIRS="$PAIRS(\"$q_org\" . \"$q_md\") "
+done
+PAIRS="$PAIRS)"
 
-  emacs -Q --batch "$org" \
-    -l "$ELISP" \
-    --eval "(readme/to-markdown \"$md\" \"true\" \"true\")"
+ALERTS_STR="true"        # set default behavior here
+TITLE_HELPER_STR="true"
 
+emacs -Q --batch \
+  --eval '(setq load-no-message t inhibit-message t message-log-max nil)' \
+  -l "$ELISP" \
+  --eval "(let* ((pairs $PAIRS)
+                 (alerts \"$ALERTS_STR\")
+                 (title  \"$TITLE_HELPER_STR\"))
+           (dolist (p pairs)
+             (let* ((org (car p)) (md (cdr p))
+                    (buf (find-file-noselect org)))
+               (with-current-buffer buf
+                 (readme/to-markdown md alerts title))
+               (kill-buffer buf))))"
+
+for org in $FILES; do
+  md=$(printf '%s' "$org" | sed 's/\.org$/.md/')
   git add -- "$md"
 done
 
-echo "[pre-commit] done"
+echo "[pre-commit] Org→MD done"
