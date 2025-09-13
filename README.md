@@ -59,4 +59,4 @@ As you can see, it creates the pre-commit script files, and configures `git` to 
 
 ## Bugs
 
-If you encounter any bugs, please use the issues tab. If you can fix them yourself, please still create an issue an then a pull request that mentions it
+If you encounter any bugs, please use the issues tab. If you can fix them yourself, please still create an issue and then a pull request that mentions it
