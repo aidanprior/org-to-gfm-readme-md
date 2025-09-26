@@ -151,8 +151,20 @@ The pre-commit framework approach gives you better control over hook execution a
 
 #### Which Option Should You Choose?
 
-- **Manual Git Hooks** (Option 1): Best if you want a simple, standalone solution with no additional dependencies
-- **Pre-commit Framework** (Option 2): Best if you already use pre-commit for other hooks or want better integration with modern development workflows
+- **Manual Git Hooks** (Option 1): 
+  - ✅ Simple, standalone solution
+  - ✅ No additional Python dependencies
+  - ✅ Works immediately after running install.sh
+  - ❌ Less integration with modern development workflows
+  - ❌ Harder to manage multiple hooks
+
+- **Pre-commit Framework** (Option 2): 
+  - ✅ Better integration with modern development workflows
+  - ✅ Easy to manage multiple hooks and formatting tools
+  - ✅ Supports hook versioning and updates
+  - ✅ Can run hooks on CI/CD systems
+  - ❌ Requires Python and pre-commit installation
+  - ❌ Slightly more complex setup
 
 Both options use the same core conversion logic and produce identical results.
 

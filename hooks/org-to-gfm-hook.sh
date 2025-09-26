@@ -1,11 +1,11 @@
 #!/bin/sh
 set -eu
 
-# Check if emacs is available
-command -v emacs >/dev/null 2>&1 || { echo "[org-to-gfm] ERROR: emacs not found" >&2; exit 1; }
-
 # Skip if environment variable is set
 [ "${SKIP_ORG_MD-}" = "1" ] && { echo "[org-to-gfm] Skipping"; exit 0; }
+
+# Check if emacs is available
+command -v emacs >/dev/null 2>&1 || { echo "[org-to-gfm] ERROR: emacs not found" >&2; exit 1; }
 
 # Path to elisp file (relative to repo root)
 ELISP_FILE=".githooks/org-to-gfm.el"
