@@ -1,0 +1,8 @@
+-   id: org-to-gfm
+    name: Convert Org files to GitHub Flavored Markdown
+    description: Converts staged .org files to .md files using Emacs and ox-gfm
+    entry: hooks/org-to-gfm-hook.sh
+    language: script
+    files: '\.org$'
+    require_serial: true
+    additional_dependencies: []

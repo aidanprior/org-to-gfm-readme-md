@@ -1,6 +1,48 @@
 #!/bin/sh
 set -eu
 
+# ---- Options handling ----
+ELISP_ONLY=false
+HELP=false
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --elisp-only)
+      ELISP_ONLY=true
+      shift
+      ;;
+    --help|-h)
+      HELP=true
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [ "$HELP" = true ]; then
+  cat <<EOF
+Usage: $0 [OPTIONS]
+
+Install org-to-gfm conversion tool for git hooks.
+
+OPTIONS:
+  --elisp-only    Install only elisp files, skip git hooks setup
+                  (useful when using with pre-commit framework)
+  --help, -h      Show this help message
+
+EXAMPLES:
+  # Full installation with manual git hooks
+  $0
+
+  # Install elisp only (for use with pre-commit framework)
+  $0 --elisp-only
+EOF
+  exit 0
+fi
+
 # ---- Pins (use tags or SHAs for reproducibility) ----
 OX_GFM_REF="${OX_GFM_REF:-bd85f6a}"         # e.g., 1b6b3a9
 OX_MD_TITLE_REF="${OX_MD_TITLE_REF:-0.3.0}"  # e.g., v0.1.0 or SHA
@@ -125,7 +167,8 @@ cat >>"$ELISP_FILE" <<'EOF'
 EOF
 
 # ---- Create pre-commit hook (POSIX, one quiet Emacs run) ----
-cat >"$HOOKS_DIR/pre-commit" <<EOF
+if [ "$ELISP_ONLY" = false ]; then
+  cat >"$HOOKS_DIR/pre-commit" <<EOF
 #!/bin/sh
 set -eu
 [ "\${SKIP_ORG_MD-}" = "1" ] && { echo "[pre-commit] Skipping"; exit 0; }
@@ -145,9 +188,9 @@ for org in \$FILES; do
 done
 PAIRS="\$PAIRS)"
 
-emacs -Q --batch \
-  --eval '(setq load-no-message t inhibit-message t message-log-max nil)' \
-  -l "\$ELISP" \
+emacs -Q --batch \\
+  --eval '(setq load-no-message t inhibit-message t message-log-max nil)' \\
+  -l "\$ELISP" \\
   --eval "(let* ((pairs \$PAIRS))
            (dolist (p pairs)
              (let* ((org (car p)) (md (cdr p))
@@ -162,18 +205,55 @@ for org in \$FILES; do
 done
 echo "[pre-commit] Org→MD done"
 EOF
-chmod +x "$HOOKS_DIR/pre-commit"
+  chmod +x "$HOOKS_DIR/pre-commit"
 
-# ---- Configure git hooks ----
-git config core.hooksPath "$HOOKS_DIR"
+  # ---- Configure git hooks ----
+  git config core.hooksPath "$HOOKS_DIR"
+fi
 
 echo "✅ Installed:"
 echo "  - $ELISP_FILE  (ox-gfm @ $OX_GFM_REF, ox-md-title @ $OX_MD_TITLE_REF)"
-echo "  - $HOOKS_DIR/pre-commit"
-echo "Git configured: core.hooksPath -> $HOOKS_DIR"
-echo "
-Next:
+
+if [ "$ELISP_ONLY" = false ]; then
+  echo "  - $HOOKS_DIR/pre-commit"
+  echo "Git configured: core.hooksPath -> $HOOKS_DIR"
+  echo "
+Manual git hooks installation complete!
+
+Next (for manual git hooks):
   git add $ELISP_FILE $HOOKS_DIR/pre-commit
   git commit -m 'chore: installed org→gfm pre-commit'
   # Test: edit & stage an .org file, then 'git commit'
+
+Alternative: Use with pre-commit framework
+  Instead of the above, you can use this with the pre-commit framework:
+  1. Install pre-commit: pip install pre-commit
+  2. Create .pre-commit-config.yaml with:
+     repos:
+       - repo: https://github.com/aidanprior/org-to-gfm-readme-md
+         rev: main
+         hooks:
+           - id: org-to-gfm
+  3. Run: pre-commit install
+  4. The elisp file ($ELISP_FILE) is still needed for pre-commit framework.
 "
+else
+  echo "
+Elisp dependencies installed!
+
+This installation is suitable for use with the pre-commit framework.
+
+Next steps for pre-commit framework:
+  1. Install pre-commit: pip install pre-commit
+  2. Create .pre-commit-config.yaml with:
+     repos:
+       - repo: https://github.com/aidanprior/org-to-gfm-readme-md
+         rev: main
+         hooks:
+           - id: org-to-gfm
+  3. Run: pre-commit install
+  4. Test: git add some .org file && git commit
+
+To use manual git hooks instead, run this script without --elisp-only.
+"
+fi
