@@ -1,0 +1,5 @@
+repos:
+  - repo: https://github.com/aidanprior/org-to-gfm-readme-md
+    rev: main  # Use the ref you want to point at
+    hooks:
+      - id: org-to-gfm

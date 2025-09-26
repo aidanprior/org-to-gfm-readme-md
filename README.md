@@ -66,6 +66,11 @@ It assumes you have `emacs` installed.
 
 ### Installation
 
+You can use this tool in two ways:
+
+
+#### Option 1: Manual Git Hooks Installation
+
 Install with the following curl command:
 
 > [!WARNING]
@@ -82,14 +87,74 @@ curl -fsSL "https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/re
   - .githooks/pre-commit
 Git configured: core.hooksPath -> .githooks
 
-Next:
+Manual git hooks installation complete!
+
+Next (for manual git hooks):
   git add .githooks/org-to-gfm.el .githooks/pre-commit
   git commit -m 'chore: installed org→gfm pre-commit'
   # Test: edit & stage an .org file, then 'git commit'
 
+Alternative: Use with pre-commit framework
+  Instead of the above, you can use this with the pre-commit framework:
+  1. Install pre-commit: pip install pre-commit
+  2. Create .pre-commit-config.yaml with:
+     repos:
+       - repo: https://github.com/aidanprior/org-to-gfm-readme-md
+         rev: main
+         hooks:
+           - id: org-to-gfm
+  3. Run: pre-commit install
+  4. The elisp file (.githooks/org-to-gfm.el) is still needed for pre-commit framework.
+
 ```
 
 As you can see, it creates the pre-commit script files, and configures `git` to use them. From there, follow the next steps. Commit org files, and watch them convert automatically
+
+
+#### Option 2: Pre-commit Framework (Recommended)
+
+If you prefer using the [pre-commit framework](https://pre-commit.com/), you can use this hook without running the install script:
+
+1. Install pre-commit:
+   ```sh
+   pip install pre-commit
+   ```
+
+2. First, you still need the elisp dependencies. Run just the elisp setup:
+   ```sh
+   curl -fsSL "https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/install.sh" | sh -s -- --elisp-only
+   ```
+
+3. Create `.pre-commit-config.yaml` in your repository:
+   ```yaml
+   repos:
+     - repo: https://github.com/aidanprior/org-to-gfm-readme-md
+       rev: main  # or use a specific tag/commit
+       hooks:
+         - id: org-to-gfm
+   ```
+
+4. Install the pre-commit hook:
+   ```sh
+   pre-commit install
+   ```
+
+5. Test it:
+   ```sh
+   # Edit an .org file, stage it, and commit
+   git add README.org
+   git commit -m "test conversion"
+   ```
+
+The pre-commit framework approach gives you better control over hook execution and integrates well with other code quality tools.
+
+
+#### Which Option Should You Choose?
+
+- **Manual Git Hooks** (Option 1): Best if you want a simple, standalone solution with no additional dependencies
+- **Pre-commit Framework** (Option 2): Best if you already use pre-commit for other hooks or want better integration with modern development workflows
+
+Both options use the same core conversion logic and produce identical results.
 
 
 ## Bugs

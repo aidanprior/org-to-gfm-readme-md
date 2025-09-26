@@ -52,6 +52,11 @@ It assumes you have =emacs= installed.
 
 /This feels like a fairly safe assumption if you are editing =org= files./
 ** Installation
+
+You can use this tool in two ways:
+
+*** Option 1: Manual Git Hooks Installation
+
 Install with the following curl command:
     #+begin_warning
     Always inspect scripts you intend to run on your computer. Do not trust me.
@@ -77,6 +82,50 @@ Next:
 
 As you can see, it creates the pre-commit script files, and configures =git= to use them.
 From there, follow the next steps. Commit org files, and watch them convert automatically
+
+*** Option 2: Pre-commit Framework (Recommended)
+
+If you prefer using the [[https://pre-commit.com/][pre-commit framework]], you can use this hook without running the install script:
+
+1. Install pre-commit:
+   #+begin_src sh
+   pip install pre-commit
+   #+end_src
+
+2. First, you still need the elisp dependencies. Run just the elisp setup:
+   #+begin_src sh
+   curl -fsSL "https://raw.githubusercontent.com/aidanprior/org-to-gfm-readme-md/refs/heads/main/install.sh" | sh -s -- --elisp-only
+   #+end_src
+
+3. Create =.pre-commit-config.yaml= in your repository:
+   #+begin_src yaml
+   repos:
+     - repo: https://github.com/aidanprior/org-to-gfm-readme-md
+       rev: main  # or use a specific tag/commit
+       hooks:
+         - id: org-to-gfm
+   #+end_src
+
+4. Install the pre-commit hook:
+   #+begin_src sh
+   pre-commit install
+   #+end_src
+
+5. Test it:
+   #+begin_src sh
+   # Edit an .org file, stage it, and commit
+   git add README.org
+   git commit -m "test conversion"
+   #+end_src
+
+The pre-commit framework approach gives you better control over hook execution and integrates well with other code quality tools.
+
+*** Which Option Should You Choose?
+
+- *Manual Git Hooks* (Option 1): Best if you want a simple, standalone solution with no additional dependencies
+- *Pre-commit Framework* (Option 2): Best if you already use pre-commit for other hooks or want better integration with modern development workflows
+
+Both options use the same core conversion logic and produce identical results.
 
 * Bugs
         If you encounter any bugs, please use the issues tab.
