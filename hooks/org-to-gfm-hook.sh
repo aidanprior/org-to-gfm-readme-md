@@ -17,12 +17,11 @@ ELISP_FILE=".githooks/org-to-gfm.el"
 }
 
 # Get the .org files passed as arguments from pre-commit
-ORG_FILES="$@"
-[ -z "$ORG_FILES" ] && { echo "[org-to-gfm] No .org files to process."; exit 0; }
+[ -z "$@" ] && { echo "[org-to-gfm] No .org files to process."; exit 0; }
 
 # Build pairs for emacs processing
 PAIRS="'("
-for org in "$ORG_FILES"; do
+for org in "$@"; do
     md=$(printf '%s' "$org" | sed 's/\.org$/\.md/')
     q_org=$(printf '%s' "$org" | sed 's/"/\\"/g')
     q_md=$(printf '%s' "$md" | sed 's/"/\\"/g')
@@ -43,7 +42,7 @@ emacs -Q --batch \
                    (kill-buffer buf))))"
 
 # Add generated markdown files to git
-for org in "$ORG_FILES"; do
+for org in "$@"; do
     md=$(printf '%s' "$org" | sed 's/\.org$/\.md/')
     git add -- "$md"
 done
