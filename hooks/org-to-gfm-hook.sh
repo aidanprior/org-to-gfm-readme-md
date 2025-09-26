@@ -17,7 +17,7 @@ ELISP_FILE=".githooks/org-to-gfm.el"
 }
 
 # Get the .org files passed as arguments from pre-commit
-[ -z "$@" ] && { echo "[org-to-gfm] No .org files to process."; exit 0; }
+[ $# -eq 0 ] && { echo "[org-to-gfm] No .org files to process."; exit 0; }
 
 # Build pairs for emacs processing
 PAIRS="'("
