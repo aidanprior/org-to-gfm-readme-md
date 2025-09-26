@@ -39,7 +39,8 @@ emacs -Q --batch \
                         (buf (find-file-noselect org)))
                    (with-current-buffer buf
                      (readme/to-markdown md))
-                   (kill-buffer buf))))"
+                   (kill-buffer buf))))"\
+    || exit 1
 
 # Add generated markdown files to git
 for org in "$@"; do
